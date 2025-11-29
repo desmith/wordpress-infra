@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: al2023
+  description: Amazon Linux 2023 base configuration
+  platforms:
+    - name: Amazon
+      versions:
+        - 2023
+dependencies: []

@@ -1,0 +1,6 @@
+---
+# Handlers for al2023 role
+- name: restart chronyd
+  systemd:
+    name: chronyd
+    state: restarted

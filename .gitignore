@@ -1,0 +1,20 @@
+/.history/
+/backups/
+
+
+
+# Ansible
+*.retry
+.vault_pass
+ansible.log
+
+
+# SSH keys
+*.pem
+*.key
+id_rsa*
+*.ppk
+
+# OS
+.DS_Store
+Thumbs.db

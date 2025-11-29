@@ -1,0 +1,80 @@
+---
+- name: Update system packages
+  dnf:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install essential packages
+  dnf:
+    name: "{{ al2023_packages }}"
+    state: present
+
+- name: Set timezone
+  timezone:
+    name: "{{ al2023_timezone }}"
+
+- name: Enable and start chronyd
+  systemd:
+    name: chronyd
+    enabled: yes
+    state: started
+
+- name: Check if /usr/local/bin/fish is installed
+  stat:
+    path: /usr/local/bin/fish
+  register: fish_binary
+
+- name: Output usr/local/bin/fish
+  debug:
+    msg: "Fish binary exists: {{ fish_binary.stat.exists }}"
+
+- name: Test if fish is installed
+  command: which fish
+  register: fish_check
+  changed_when: false
+  failed_when: false
+
+- name: Output 'which fish'
+  debug:
+    msg: "{{ fish_check.cmd }}: {{ fish_check.stderr_lines }}"
+
+
+# - name: Install and configure fish shell
+#   import_tasks: fish.yml
+#   when: not fish_binary.stat.exists
+
+# - name: Check if fish is installed
+#   command: which fish
+#   register: fish_check
+#   changed_when: false
+#   failed_when: false
+
+# - name: Install and configure fish shell
+#   import_tasks: fish.yml
+#   when: fish_check.rc != 0
+
+- name: Copy dotfiles to root home directory
+  copy:
+    src: "{{ item }}"
+    dest: "/root/.{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - bashrc
+    - bash_profile
+    - aliases
+
+- name: Copy dotfiles to ec2-user home directory
+  copy:
+    src: "{{ item }}"
+    dest: "/home/ec2-user/.{{ item }}"
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+  loop:
+    - bashrc
+    - bash_profile
+    - aliases
+

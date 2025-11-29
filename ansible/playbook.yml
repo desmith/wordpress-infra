@@ -1,0 +1,51 @@
+---
+- name: Install OS updates and configure webserver with php, nginx, and wordpress
+  hosts: webservers
+  become: yes
+
+  vars:
+    # Environment configuration
+    env: "{{ env | default('dev') }}"
+    host_name: "{{ host_name }} | default('wordpress-infra.iskcon.org') }}"
+    docroot: "/var/www/{{ host_name }}/www"
+
+    # Database credentials from AWS Secrets Manager
+    db_secret_name: "{{ secrets_name | default('secrets/dev/rds')}}"
+    db_secrets: "{{ lookup('amazon.aws.secretsmanager_secret', db_secret_name, region='us-east-1') | from_json }}"
+
+  roles:
+    # Configure Amazon Linux 2023 base system
+    - role: al2023
+      tags: [al2023, base]
+
+    # Install PHP and PHP-FPM first
+    - role: php
+      tags: [php]
+      php_fpm_user: "nginx"
+      php_fpm_group: "nginx"
+      php_fpm_listen: "/run/php-fpm/www.sock"
+
+    # Install and configure WordPress
+    - role: wordpress
+      tags: [wordpress]
+      wordpress_db_name: "{{ db_secrets.dbname | default('wordpress') }}"
+      wordpress_db_user: "{{ db_secrets.username | default('wordpress') }}"
+      wordpress_db_password: "{{ db_secrets.password }}"
+      wordpress_db_host: "{{ db_secrets.host | default('localhost') }}"
+      wordpress_db_port: "{{ db_secrets.port | default('3306') }}"
+      wordpress_web_root: "{{ docroot }}"
+      wordpress_user: "nginx"
+      wordpress_group: "ec2-user"
+      wordpress_admin_user: "{{ db_secrets.wp_admin_user }}"
+      wordpress_admin_password: "{{ db_secrets.wp_admin_password }}"
+      wordpress_admin_email: "{{ db_secrets.wp_admin_email }}"
+      wordpress_site_url: "https://{{ site_name }}g"
+
+    # Install and configure nginx
+    - role: nginx
+      tags: [nginx]
+      nginx_host_name: "{{ host_name }}"
+      nginx_root: "{{ docroot }}"
+      nginx_remove_default_vhost: true
+      nginx_access_log: "/var/log/nginx/{{ host_name }}_access.log"
+      nginx_error_log: "/var/log/nginx/{{ host_name }}_error.log"

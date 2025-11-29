@@ -1,0 +1,22 @@
+---
+collections:
+  - name: amazon.aws
+    version: ">=2.0.0"
+
+roles:
+  # nginx role from separate repository
+  - name: nginx
+    src: git+https://github.com/desmith/ansible-role-nginx.git
+    version: main
+    scm: git
+
+  # WordPress role from separate repository
+  - name: wordpress
+    src: git+https://github.com/desmith/ansible-role-wordpress.git
+    version: main
+    scm: git
+
+  - name: php
+    src: git+https://github.com/desmith/ansible-role-php.git
+    version: main
+    scm: git

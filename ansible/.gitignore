@@ -1,0 +1,5 @@
+inventory.ini
+collections/
+roles/php/
+roles/nginx/
+roles/wordpress/

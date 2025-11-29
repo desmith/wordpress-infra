@@ -1,0 +1,56 @@
+- name: Install Development Tools
+  dnf:
+    name: "@Development Tools"
+    state: present
+
+- name: Install fish dependencies
+  dnf:
+    name:
+      - cmake
+      - cargo
+      - gettext
+      - automake
+      - make
+      - gcc
+      - ncurses
+      - ncurses-devel
+
+    state: present
+
+- name: Clone fish-shell repository
+  git:
+    repo: https://github.com/fish-shell/fish-shell.git
+    dest: /tmp/fish-shell
+    version: master
+
+- name: Create build directory
+  file:
+    path: /tmp/fish-shell/build
+    state: directory
+
+- name: Configure fish build
+  shell: cmake ..
+  args:
+    chdir: /tmp/fish-shell/build
+    creates: /tmp/fish-shell/build/Makefile
+
+- name: Compile fish
+  shell: make -j$(nproc)
+  args:
+    chdir: /tmp/fish-shell/build
+
+- name: Install fish
+  shell: make install
+  args:
+    chdir: /tmp/fish-shell/build
+  become: yes
+
+- name: Set fish as default shell for ec2-user
+  user:
+    name: ec2-user
+    shell: /usr/local/bin/fish
+
+- name: Set fish as default shell for root
+  user:
+    name: root
+    shell: /usr/local/bin/fish

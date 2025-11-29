@@ -1,0 +1,13 @@
+---
+# Amazon Linux 2023 default variables
+al2023_packages:
+  - git
+  - htop
+  - tar
+  - unzip
+  - wget
+
+
+# System configuration
+al2023_timezone: "UTC"
+al2023_update_system: true

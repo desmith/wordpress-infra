@@ -1,0 +1,5 @@
+project_name        = "PROJECT_NAME"
+hostname            = "HOSTNAME"
+env                 = "ENV"
+key_pair_name       = "PROJECT_NAME"
+secrets_name        = "SECRETS_NAME"
