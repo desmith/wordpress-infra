@@ -34,10 +34,7 @@ variable "key_pair_name" {
 variable "security_group_ids" {
   description = "List of security group IDs"
   type        = list(string)
-  default     = [
-    "sg-02fb8ee3c8ace0441", # AdminSG
-    "sg-94c8cee3"  # WebAppSG
-    ]
+
 }
 
 variable "subnet_id" {
