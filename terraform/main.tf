@@ -6,7 +6,6 @@ locals {
   listener_rule_name = replace(replace("${var.project_name}-${var.env}", ".", "-"), " ", "")
   listener_rule_priority = 9
 
-
 }
 
 # Get home directory

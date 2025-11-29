@@ -3,7 +3,7 @@ resource "aws_instance" "webserver" {
   ami                    = data.aws_ami.amazon_linux_2023.id
   instance_type          = var.instance_type
   key_name               = var.key_pair_name
-  vpc_security_group_ids = var.security_group_ids
+  vpc_security_group_ids = concat(var.security_group_ids, [aws_security_group.admin_sg.id])
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   subnet_id              = var.subnet_id
 
@@ -32,21 +32,5 @@ resource "aws_eip" "webserver_eip" {
 
   tags = {
     Name = "${var.env}.${var.project_name}"
-  }
-}
-
-# Security group rule to allow SSH from current workstation IP
-# This rule will be added to the AdminSG (sg-02fb8ee3c8ace0441)
-resource "aws_security_group_rule" "admin_sg_ssh_from_workstation" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = [local.ssh_cidr]
-  security_group_id = "sg-02fb8ee3c8ace0441"
-  description       = "Current workstation IP - via Terraform"
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
