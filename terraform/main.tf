@@ -1,6 +1,5 @@
 # Local value to construct subdomain name
 locals {
-  subdomain_name = "${var.env}.iskcon.org"
   vpc_id = data.aws_subnet.webserver.vpc_id
   ssh_cidr = "${chomp(data.http.current_ip.response_body)}/32"
   target_group_name = replace(replace("${var.env}-${var.project_name}-tg", ".", ""), " ", "")
@@ -69,7 +68,7 @@ resource "local_file" "ansible_inventory" {
 # Generate SSH config file
 resource "local_file" "ssh_config" {
   content = templatefile("${path.module}/templates/ssh_config.tpl", {
-    host_name     = "${var.env}.${var.project_name}"
+    hostname     = var.hostname
     instance_ip   = aws_eip.webserver_eip.private_ip
     key_pair_name = var.key_pair_name
     env           = var.env

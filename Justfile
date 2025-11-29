@@ -167,103 +167,115 @@ ansible \
 
 # Run only the al2023 role
 [group: "Ansible"]
-ansible-al2023 environment=default-environment *args:
+ansible-al2023 \
+    hostname=default-hostname \
+    project_name=default-project_name \
+    environment=default-environment \
+    *args:
     #!/usr/bin/env bash
     set -e
     cd {{ansible-dir}}
+
+    # Get secrets name
+    secrets_name=$(just get-secrets-name {{project_name}} {{environment}})
 
     # Always install/update collections and roles
     echo "Installing/updating Ansible collections and roles..."
     ansible-galaxy collection install -r requirements.yml -p ./collections
     ansible-galaxy role install -r requirements.yml -p ./roles
-
-    # Get environment from tfvars
-    TF_ENV=$(grep -E '^env\s*=' ../{{terraform-dir}}/vars/{{environment}}.tfvars 2>/dev/null | cut -d'"' -f2 || echo "{{environment}}")
 
     # Run only al2023 role
     ansible-playbook \
         -i inventory.ini \
-        playbook.yml \
-        -e "env=${TF_ENV}" \
+        -e "env={{environment}}" \
+        -e "host_name={{hostname}}" \
+        -e "secrets_name=${secrets_name}" \
         --tags al2023 \
-        {{args}}
+        playbook.yml {{args}}
 
 # Run only the php role
 [group: "Ansible"]
-ansible-php environment=default-environment *args:
+ansible-php \
+    hostname=default-hostname \
+    project_name=default-project_name \
+    environment=default-environment \
+    *args:
     #!/usr/bin/env bash
     set -e
     cd {{ansible-dir}}
+
+    # Get secrets name
+    secrets_name=$(just get-secrets-name {{project_name}} {{environment}})
 
     # Always install/update collections and roles
     echo "Installing/updating Ansible collections and roles..."
     ansible-galaxy collection install -r requirements.yml -p ./collections
     ansible-galaxy role install -r requirements.yml -p ./roles
-
-    # Get environment from tfvars
-    TF_ENV=$(grep -E '^env\s*=' ../{{terraform-dir}}/vars/{{environment}}.tfvars 2>/dev/null | cut -d'"' -f2 || echo "{{environment}}")
 
     # Run only php role
     ansible-playbook \
         -i inventory.ini \
-        playbook.yml \
-        -e "env=${TF_ENV}" \
+        -e "env={{environment}}" \
+        -e "host_name={{hostname}}" \
+        -e "secrets_name=${secrets_name}" \
         --tags php \
-        {{args}}
+        playbook.yml {{args}}
 
 # Run only the wordpress role
 [group: "Ansible"]
-ansible-wordpress environment=default-environment *args:
+ansible-wordpress \
+    hostname=default-hostname \
+    project_name=default-project_name \
+    environment=default-environment \
+    *args:
     #!/usr/bin/env bash
     set -e
     cd {{ansible-dir}}
+
+    # Get secrets name
+    secrets_name=$(just get-secrets-name {{project_name}} {{environment}})
 
     # Always install/update collections and roles
     echo "Installing/updating Ansible collections and roles..."
     ansible-galaxy collection install -r requirements.yml -p ./collections
     ansible-galaxy role install -r requirements.yml -p ./roles
-
-    # Get environment from tfvars
-    TF_ENV=$(grep -E '^env\s*=' ../{{terraform-dir}}/vars/{{environment}}.tfvars 2>/dev/null | cut -d'"' -f2 || echo "{{environment}}")
 
     # Run only wordpress role
     ansible-playbook \
         -i inventory.ini \
-        playbook.yml \
-        -e "env=${TF_ENV}" \
+        -e "env={{environment}}" \
+        -e "host_name={{hostname}}" \
+        -e "secrets_name=${secrets_name}" \
         --tags wordpress \
-        {{args}}
+        playbook.yml {{args}}
 
 # Run only the nginx role
 [group: "Ansible"]
-ansible-nginx environment=default-environment *args:
+ansible-nginx \
+    hostname=default-hostname \
+    project_name=default-project_name \
+    environment=default-environment \
+    *args:
     #!/usr/bin/env bash
     set -e
     cd {{ansible-dir}}
+
+    # Get secrets name
+    secrets_name=$(just get-secrets-name {{project_name}} {{environment}})
 
     # Always install/update collections and roles
     echo "Installing/updating Ansible collections and roles..."
     ansible-galaxy collection install -r requirements.yml -p ./collections
     ansible-galaxy role install -r requirements.yml -p ./roles
 
-    # Get environment from tfvars
-    TF_ENV=$(grep -E '^env\s*=' ../{{terraform-dir}}/vars/{{environment}}.tfvars 2>/dev/null | cut -d'"' -f2 || echo "{{environment}}")
-
     # Run only nginx role
     ansible-playbook \
         -i inventory.ini \
-        playbook.yml \
-        -e "env=${TF_ENV}" \
+        -e "env={{environment}}" \
+        -e "host_name={{hostname}}" \
+        -e "secrets_name=${secrets_name}" \
         --tags nginx \
-        {{args}}
-
-# Full workflow: apply infrastructure then run Ansible
-[group: "Ansible"]
-deploy-full environment=default-environment:
-    #!/usr/bin/env bash
-    set -e
-    just apply environment={{environment}}
-    just ansible environment={{environment}}
+        playbook.yml {{args}}
 
 clean:
     #!/usr/bin/env bash

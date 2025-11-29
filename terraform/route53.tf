@@ -3,7 +3,7 @@
 # Route 53 record for subdomain pointing to CloudFront (alias record)
 resource "aws_route53_record" "webserver_subdomain" {
   zone_id = var.hosted_zone_id
-  name    = local.subdomain_name
+  name    = var.hostname
   type    = "A"
 
   alias {

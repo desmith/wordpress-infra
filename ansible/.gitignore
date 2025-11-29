@@ -3,3 +3,7 @@ collections/
 roles/php/
 roles/nginx/
 roles/wordpress/
+
+*.retry
+.vault_pass
+ansible.log

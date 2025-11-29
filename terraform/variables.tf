@@ -15,6 +15,11 @@ variable "env" {
   default     = "dev"
 }
 
+variable "hostname" {
+  description = "Hostname for the instance"
+  type        = string
+}
+
 variable "instance_type" {
   description = "EC2 instance type (must be Graviton/ARM64 compatible)"
   type        = string
@@ -49,17 +54,42 @@ variable "subnet_id" {
 variable "hosted_zone_id" {
   description = "Route 53 hosted zone ID for the domain"
   type        = string
-  default     = "ZBF1C0OM7KPJY"  # ISKCON.org
 }
 
 variable "load_balancer_arn" {
   description = "ARN of the Application Load Balancer"
   type        = string
-  default     = "arn:aws:elasticloadbalancing:us-east-1:793753096261:loadbalancer/app/ICG-ELB/ed8f2ac6e693c7b2"
 }
 
 variable "ssl_certificate_arn" {
   description = "ARN of the SSL certificate for the ELB"
   type        = string
-  default     = "arn:aws:acm:us-east-1:793753096261:certificate/c9bb28af-b8d0-44ba-8fac-ed3642605809"
 }
+
+variable "secrets_name" {
+  description = "Name of the AWS Secrets Manager secret"
+  type        = string
+}
+
+# Database secrets
+variable "db_name" {
+  description = "Name of the database"
+  type        = string
+}
+
+variable "db_username" {
+  description = "Username for the database"
+  type        = string
+}
+
+variable "wp_admin_user" {
+  description = "Username for the WordPress admin user"
+  type        = string
+  default     = "admin"
+}
+
+variable "wp_admin_email" {
+  description = "Email for the WordPress admin user"
+  type        = string
+}
+

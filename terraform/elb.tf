@@ -38,7 +38,7 @@ resource "aws_lb_listener_rule" "webserver" {
 
   condition {
     host_header {
-      values = [local.subdomain_name]
+      values = [var.hostname]
     }
   }
 

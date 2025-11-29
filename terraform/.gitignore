@@ -1,3 +1,5 @@
+tfplan
+tfplan.txt
 *.tfbackend
 *.tfvars
 *.tfstate

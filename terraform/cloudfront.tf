@@ -2,11 +2,11 @@
 resource "aws_cloudfront_distribution" "webserver" {
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = local.subdomain_name
+  comment             = var.hostname
 
   price_class         = "PriceClass_100" # Use only North America and Europe
 
-  aliases = [local.subdomain_name]
+  aliases = [var.hostname]
 
   origin {
     domain_name = data.aws_lb.existing_lb.dns_name

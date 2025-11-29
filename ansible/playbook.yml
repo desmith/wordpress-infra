@@ -6,8 +6,7 @@
   vars:
     # Environment configuration
     env: "{{ env | default('dev') }}"
-    host_name: "{{ host_name }} | default('wordpress-infra.iskcon.org') }}"
-    docroot: "/var/www/{{ host_name }}/www"
+    docroot: "/var/www/{{ hostname | default('/var/www/html')}}/www"
 
     # Database credentials from AWS Secrets Manager
     db_secret_name: "{{ secrets_name | default('secrets/dev/rds')}}"
@@ -39,13 +38,13 @@
       wordpress_admin_user: "{{ db_secrets.wp_admin_user }}"
       wordpress_admin_password: "{{ db_secrets.wp_admin_password }}"
       wordpress_admin_email: "{{ db_secrets.wp_admin_email }}"
-      wordpress_site_url: "https://{{ site_name }}g"
+      wordpress_site_url: "https://{{ hostname }}g"
 
     # Install and configure nginx
     - role: nginx
       tags: [nginx]
-      nginx_host_name: "{{ host_name }}"
+      nginx_host_name: "{{ hostname }}"
       nginx_root: "{{ docroot }}"
       nginx_remove_default_vhost: true
-      nginx_access_log: "/var/log/nginx/{{ host_name }}_access.log"
-      nginx_error_log: "/var/log/nginx/{{ host_name }}_error.log"
+      nginx_access_log: "/var/log/nginx/{{ hostname }}_access.log"
+      nginx_error_log: "/var/log/nginx/{{ hostname }}_error.log"
