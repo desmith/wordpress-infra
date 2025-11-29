@@ -4,6 +4,12 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "aws_region_alias" {
+  description = "AWS region alias"
+  type        = string
+  default     = "us_east_1"
+}
+
 variable "project_name" {
   description = "Project name for resource naming"
   type        = string
@@ -84,3 +90,8 @@ variable "wp_admin_email" {
   type        = string
 }
 
+variable "cloudfront_distro" {
+  description = "Whether to create a CloudFront distribution"
+  type        = bool
+  default     = false
+}

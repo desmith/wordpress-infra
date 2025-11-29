@@ -1,5 +1,6 @@
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "webserver" {
+  count = var.cloudfront_distro ? 1 : 0
   enabled             = true
   is_ipv6_enabled     = true
   comment             = var.hostname
@@ -175,9 +176,4 @@ resource "aws_cloudfront_distribution" "webserver" {
   }
 }
 
-# Provider for us-east-1 (required for CloudFront certificates)
-provider "aws" {
-  alias  = "us_east_1"
-  region = "us-east-1"
-}
 
