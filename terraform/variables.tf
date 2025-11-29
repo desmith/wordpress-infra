@@ -31,12 +31,6 @@ variable "key_pair_name" {
   type        = string
 }
 
-variable "ssh_cidr" {
-  description = "CIDR block for SSH access"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
 variable "security_group_ids" {
   description = "List of security group IDs"
   type        = list(string)
