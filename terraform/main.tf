@@ -4,7 +4,7 @@ locals {
   ssh_cidr = "${chomp(data.http.current_ip.response_body)}/32"
   target_group_name = replace(replace("${var.env}-${var.project_name}-tg", ".", ""), " ", "")
   listener_rule_name = replace(replace("${var.project_name}-${var.env}", ".", "-"), " ", "")
-  listener_rule_priority = 9
+  listener_rule_priority = 99
 
 }
 
