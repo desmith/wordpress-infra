@@ -161,7 +161,7 @@ ansible \
     ansible-playbook \
         -i inventory.ini \
         -e "env={{environment}}" \
-        -e "host_name={{hostname}}" \
+        -e "hostname={{hostname}}" \
         -e "secrets_name=${secrets_name}" \
         playbook.yml {{args}}
 
