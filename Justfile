@@ -188,7 +188,7 @@ ansible-al2023 \
     ansible-playbook \
         -i inventory.ini \
         -e "env={{environment}}" \
-        -e "host_name={{hostname}}" \
+        -e "hostname={{hostname}}" \
         -e "secrets_name=${secrets_name}" \
         --tags al2023 \
         playbook.yml {{args}}
@@ -216,7 +216,7 @@ ansible-php \
     ansible-playbook \
         -i inventory.ini \
         -e "env={{environment}}" \
-        -e "host_name={{hostname}}" \
+        -e "hostname={{hostname}}" \
         -e "secrets_name=${secrets_name}" \
         --tags php \
         playbook.yml {{args}}
@@ -244,7 +244,7 @@ ansible-wordpress \
     ansible-playbook \
         -i inventory.ini \
         -e "env={{environment}}" \
-        -e "host_name={{hostname}}" \
+        -e "hostname={{hostname}}" \
         -e "secrets_name=${secrets_name}" \
         --tags wordpress \
         playbook.yml {{args}}
@@ -272,7 +272,7 @@ ansible-nginx \
     ansible-playbook \
         -i inventory.ini \
         -e "env={{environment}}" \
-        -e "host_name={{hostname}}" \
+        -e "hostname={{hostname}}" \
         -e "secrets_name=${secrets_name}" \
         --tags nginx \
         playbook.yml {{args}}
