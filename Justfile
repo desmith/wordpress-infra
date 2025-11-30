@@ -70,7 +70,8 @@ init \
     tfenv use
     terraform version
     terraform init \
-    -backend-config="./vars/{{environment}}.tfbackend"
+    -backend-config="./vars/{{environment}}.tfbackend" \
+    -reconfigure
 
 # Plan Terraform changes
 [group: "Terraform"]
