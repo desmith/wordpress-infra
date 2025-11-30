@@ -59,6 +59,7 @@ resource "local_file" "ansible_inventory" {
     instance_ip   = aws_eip.webserver_eip.public_ip
     key_pair_name = var.key_pair_name
     env           = var.env
+    hostname      = var.hostname
   })
   filename = "${path.module}/../ansible/inventory.ini"
 }
