@@ -7,7 +7,4 @@ hosted_zone_id      = ""
 load_balancer_arn   = ""
 ssl_certificate_arn = ""
 security_group_ids  = []
-db_name             = ""
-db_username         = ""
-wp_admin_user       = ""
-wp_admin_email      = ""
+
