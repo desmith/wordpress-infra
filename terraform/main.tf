@@ -4,25 +4,10 @@ locals {
   ssh_cidr = "${chomp(data.http.current_ip.response_body)}/32"
   target_group_name = replace(replace("${var.env}-${var.project_name}-tg", ".", ""), " ", "")
   listener_rule_name = replace(replace("${var.project_name}-${var.env}", ".", "-"), " ", "")
-  listener_rule_priority = 99
+  listener_rule_priority = tonumber(data.external.listener_rules.result.output)
 
 }
 
-# Get home directory
-data "external" "home_dir" {
-  program = ["sh", "-c", "echo '{\"home\":\"'$HOME'\"}'"]
-}
-
-# Get current workstation public IP address
-data "http" "current_ip" {
-  url = "https://api.ipify.org"
-
-  request_headers = {
-    Accept = "text/plain"
-  }
-}
-
-# Get the latest Amazon Linux 2023 AMI for Graviton
 data "aws_ami" "amazon_linux_2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -51,6 +36,33 @@ data "aws_lb_listener" "https" {
 # Get subnet details to determine VPC ID
 data "aws_subnet" "webserver" {
   id = var.subnet_id
+}
+
+# Get current workstation public IP address
+data "http" "current_ip" {
+  url = "https://api.ipify.org"
+
+  request_headers = {
+    Accept = "text/plain"
+  }
+}
+
+# Get home directory
+data "external" "home_dir" {
+  program = ["sh", "-c", "echo '{\"home\":\"'$HOME'\"}'"]
+}
+
+# Get the latest Amazon Linux 2023 AMI for Graviton
+# Get existing listener rules to determine next priority
+data "external" "listener_rules" {
+  program = ["sh", "-c", <<-EOT
+    aws elbv2 describe-rules \
+      --listener-arn "${data.aws_lb_listener.https.arn}" \
+      --query 'Rules[?Priority!=`default`].Priority' \
+      --output json | \
+    jq -r 'if length > 0 then [.[] | tonumber] | max + 1 else 1 end'
+  EOT
+  ]
 }
 
 # Generate Ansible inventory file
